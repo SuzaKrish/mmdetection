@@ -45,7 +45,7 @@ test_cfg = dict(
     max_per_img=200)
 # dataset settings
 dataset_type = 'WIDERFaceDataset'
-data_root = 'data/WIDERFace/'
+data_root = '../data/WIDERFace/'
 img_norm_cfg = dict(mean=[123.675, 116.28, 103.53], std=[1, 1, 1], to_rgb=True)
 train_pipeline = [
     dict(type='LoadImageFromFile', to_float32=True),
@@ -107,19 +107,20 @@ data = dict(
         img_prefix=data_root + 'WIDER_val/',
         pipeline=test_pipeline))
 # optimizer
-optimizer = dict(type='SGD', lr=0.012, momentum=0.9, weight_decay=5e-4)
+optimizer = dict(type='SGD', lr=2e-3, momentum=0.9, weight_decay=5e-4)
+# optimizer = dict(type='SGD', lr=0.012, momentum=0.9, weight_decay=5e-4)
 optimizer_config = dict()
 # learning policy
 lr_config = dict(
     policy='step',
     warmup='linear',
-    warmup_iters=1000,
-    warmup_ratio=1.0 / 3,
-    step=[16, 20])
-checkpoint_config = dict(interval=1)
+    warmup_iters=500,  # 1000
+    warmup_ratio=1.0 / 10,  # 1.0 / 3,
+    step=[16, 22])  # 16, 20
+checkpoint_config = dict(interval=1)  # 1
 # yapf:disable
 log_config = dict(
-    interval=1,
+    interval=10,
     hooks=[
         dict(type='TextLoggerHook'),
         # dict(type='TensorboardLoggerHook')
