@@ -1,6 +1,6 @@
 from __future__ import division
 import argparse
-import os
+import os, sys
 import os.path as osp
 import time
 
@@ -90,6 +90,7 @@ def main():
     logger = get_root_logger(log_file=log_file, log_level=cfg.log_level)
 
     # log some basic info
+    logger.info('Command-line argument:\n{}'.format(' '.join(sys.argv[1:])))
     logger.info('Distributed training: {}'.format(distributed))
     logger.info('MMDetection Version: {}'.format(__version__))
     logger.info('Config:\n{}'.format(cfg.text))
