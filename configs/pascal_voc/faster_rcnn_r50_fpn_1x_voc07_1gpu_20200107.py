@@ -136,10 +136,9 @@ data = dict(
         dataset=dict(
             type=dataset_type,
             ann_file=[
-                data_root + 'VOC2007/ImageSets/Main/trainval.txt',
-                data_root + 'VOC2012/ImageSets/Main/trainval.txt'
+                data_root + 'VOC2007/ImageSets/Main/trainval.txt'
             ],
-            img_prefix=[data_root + 'VOC2007/', data_root + 'VOC2012/'],
+            img_prefix=[data_root + 'VOC2007/'],
             pipeline=train_pipeline)),
     val=dict(
         type=dataset_type,
@@ -152,7 +151,7 @@ data = dict(
         img_prefix=data_root + 'VOC2007/',
         pipeline=test_pipeline))
 # optimizer
-optimizer = dict(type='SGD', lr=0.01, momentum=0.9, weight_decay=0.0001)
+optimizer = dict(type='SGD', lr=0.0025, momentum=0.9, weight_decay=0.0001)
 optimizer_config = dict(grad_clip=dict(max_norm=35, norm_type=2))
 # learning policy
 lr_config = dict(policy='step', step=[3])  # actual epoch = 3 * 3 = 9
@@ -165,11 +164,12 @@ log_config = dict(
         # dict(type='TensorboardLoggerHook')
     ])
 # yapf:enable
+evaluation = dict(interval=1)
 # runtime settings
 total_epochs = 4  # actual epoch = 4 * 3 = 12
 dist_params = dict(backend='nccl')
 log_level = 'INFO'
-work_dir = './work_dirs/faster_rcnn_r50_fpn_1x_voc0712'
+work_dir = '../results/pacal_voc/faster_rcnn_r50_fpn_1x_voc07_1gpu'
 load_from = None
 resume_from = None
 workflow = [('train', 1)]
