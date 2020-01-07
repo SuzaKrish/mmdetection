@@ -11,7 +11,15 @@
 }
 ```
 
-## Results and Models
+## Results (for GIS)
+
+| Backbone | Style | GN | MS train | Lr schd | box AP |
+|----------|-------|----|----------|---------|--------|
+| R-50     | caffe | N  | N        | 1x      | 62.11  |
+| R-101    | caffe | N  | Y        | 2x      | 67.79  |
+| X101     | caffe | N  | Y        | 2x      | 63.15  |
+
+## Results and Models  (for COCO)
 
 | Backbone  | Style   | GN  | MS train | Lr schd | Mem (GB) | Train time (s/iter) | Inf time (fps) | box AP | Download |
 |:---------:|:-------:|:-------:|:-------:|:-------:|:--------:|:-------------------:|:--------------:|:------:|:--------:|
