@@ -7,9 +7,10 @@
 
 ### Faster-RCNN-r50-FPN
 
-| Method-Name | Seed  | Deterministic | Mem (GB) | Train time (s/iter) | Inf time (fps) | box AP |
-| :---------: | :---: | :-----------: | :------: | :-----------------: | :------------: | :----: |
-|  202001077  |  1    |     True      |    -     |          -          |        -       |  75.1  |
+|    Method-Name    | Seed  | Deterministic | Mem (GB) | Train time (s/iter) | Inf time (fps) | box AP |
+|  :-------------:  | :---: | :-----------: | :------: | :-----------------: | :------------: | :----: |
+|  20200107_163527  |  1    |     True      |    -     |          -          |        -       |  75.1  |
+|  20200108_102109  |  1    |     True      |    -     |          -          |        -       |  75.8  |
 
 
 | r50           |         |         |         |         |         |         |         |         |         |          |          |          |        |
