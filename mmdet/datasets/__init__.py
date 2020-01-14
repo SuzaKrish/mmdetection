@@ -7,11 +7,12 @@ from .loader import DistributedGroupSampler, GroupSampler, build_dataloader
 from .registry import DATASETS
 from .voc import VOCDataset
 from .wider_face import WIDERFaceDataset
+from .moon_crater import MOONCraterDataset
 from .xml_style import XMLDataset
 
 __all__ = [
     'CustomDataset', 'XMLDataset', 'CocoDataset', 'VOCDataset',
     'CityscapesDataset', 'GroupSampler', 'DistributedGroupSampler',
     'build_dataloader', 'ConcatDataset', 'RepeatDataset', 'WIDERFaceDataset',
-    'DATASETS', 'build_dataset'
+    'MOONCraterDataset', 'DATASETS', 'build_dataset'
 ]

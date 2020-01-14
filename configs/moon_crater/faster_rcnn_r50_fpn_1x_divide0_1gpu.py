@@ -37,7 +37,7 @@ model = dict(
         in_channels=256,
         fc_out_channels=1024,
         roi_feat_size=7,
-        num_classes=21,
+        num_classes=2,
         target_means=[0., 0., 0., 0.],
         target_stds=[0.1, 0.1, 0.2, 0.2],
         reg_class_agnostic=False,
@@ -98,8 +98,8 @@ test_cfg = dict(
     # e.g., nms=dict(type='soft_nms', iou_thr=0.5, min_score=0.05)
 )
 # dataset settings
-dataset_type = 'VOCDataset'
-data_root = '../data/VOCdevkit/'
+dataset_type = 'MOONCraterDataset'
+data_root = '../data/DeepMoon_divide/'
 img_norm_cfg = dict(
     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
 train_pipeline = [
@@ -131,31 +131,35 @@ data = dict(
     imgs_per_gpu=2,
     workers_per_gpu=2,
     train=dict(
-        type='RepeatDataset',
-        times=3,
-        dataset=dict(
             type=dataset_type,
             ann_file=[
-                data_root + 'VOC2007/ImageSets/Main/trainval.txt'
+                data_root + 'ImageSets/Main/train.txt'
             ],
-            img_prefix=[data_root + 'VOC2007/'],
-            pipeline=train_pipeline)),
+            img_prefix=[data_root],
+            pipeline=train_pipeline,
+            min_size=17),
     val=dict(
         type=dataset_type,
-        ann_file=data_root + 'VOC2007/ImageSets/Main/test.txt',
-        img_prefix=data_root + 'VOC2007/',
+        ann_file=data_root + 'ImageSets/Main/validmini.txt',
+        img_prefix=data_root,
         pipeline=test_pipeline),
     test=dict(
         type=dataset_type,
-        ann_file=data_root + 'VOC2007/ImageSets/Main/test.txt',
-        img_prefix=data_root + 'VOC2007/',
+        ann_file=data_root + 'ImageSets/Main/test.txt',
+        img_prefix=data_root,
         pipeline=test_pipeline))
 # optimizer
+# lr is set for a batch size of 2
 optimizer = dict(type='SGD', lr=0.0025, momentum=0.9, weight_decay=0.0001)
 optimizer_config = dict(grad_clip=dict(max_norm=35, norm_type=2))
 # learning policy
-lr_config = dict(policy='step', step=[3])  # actual epoch = 3 * 3 = 9
-checkpoint_config = dict(interval=1)
+lr_config = dict(
+    policy='step',
+    warmup='linear',
+    warmup_iters=500,
+    warmup_ratio=1.0 / 3,
+    step=[8, 11])
+checkpoint_config = dict(interval=3)
 # yapf:disable
 log_config = dict(
     interval=50,
@@ -164,12 +168,12 @@ log_config = dict(
         # dict(type='TensorboardLoggerHook')
     ])
 # yapf:enable
-evaluation = dict(interval=1)
+evaluation = dict(interval=3)
 # runtime settings
-total_epochs = 4  # actual epoch = 4 * 3 = 12
+total_epochs = 12
 dist_params = dict(backend='nccl')
 log_level = 'INFO'
-work_dir = '../results/pacal_voc/faster_rcnn_r50_fpn_1x_voc07_1gpu'
+work_dir = '../results/moon_crater/faster_rcnn_r50_fpn_1x_divide0_1gpu'
 load_from = None
 resume_from = None
 workflow = [('train', 1)]
