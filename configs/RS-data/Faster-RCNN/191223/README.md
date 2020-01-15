@@ -1,4 +1,4 @@
-# FCOS for Faster-RCNN
+# Faster-RCNN for RS images
 
 ## Date 20191223
 
