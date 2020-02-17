@@ -1,4 +1,5 @@
 matplotlib
+pycocotools
 mmcv>=0.2.15
 numpy
 # need older pillow until torchvision is fixed
