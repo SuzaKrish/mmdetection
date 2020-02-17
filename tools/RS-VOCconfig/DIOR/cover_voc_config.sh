@@ -1,2 +1,2 @@
-cp voc.py ../../../mmdet/dataset/
-cp xml_style.py ../../../mmdet/dataset/
+cp voc.py ../../../mmdet/datasets/
+cp xml_style.py ../../../mmdet/datasets/
