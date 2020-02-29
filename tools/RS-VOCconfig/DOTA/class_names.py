@@ -20,7 +20,7 @@ def voc_classes():
     return ['large-vehicle', 'swimming-pool', 'helicopter', 'bridge',
                'plane', 'ship', 'soccer-ball-field', 'basketball-court',
                'ground-track-field', 'small-vehicle', 'harbor', 'baseball-diamond',
-               'tennis-court', 'roundabout', 'storage-tank'
+               'tennis-court', 'roundabout', 'storage-tank', 'container-crane'
     ]
 
 
