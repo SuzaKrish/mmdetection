@@ -160,21 +160,25 @@ class MOONCraterDataset(XMLDataset):
             result_file.close()
             prog_bar.update()
 
-    def evaluate(self, results, metric='voc', iou_thr=0.5, nproc=4, **kwargs):
+    def evaluate(self, results, metric='mAP', logger=None, iou_thr=0.5, nproc=4, **kwargs):
+        if not isinstance(metric, str):
+            assert len(metric) == 1
+            metric = metric[0]
         if 'logger' in kwargs.keys():
             logger = kwargs['logger']
-        else:
-            logger = 'print'
+        ds_name = self.CLASSES
+        allowed_metrics = ['mAP']
+        if metric not in allowed_metrics:
+            raise KeyError('metric {} is not supported'.format(metric))
         annotations = [self.get_ann_info(i) for i in range(len(self))]
-        dataset_name = self.CLASSES
-        if metric[0] != 'voc':
-            print('only support the voc evaluation style')
-        else:
-            eval_map(
-                results,
-                annotations,
-                scale_ranges=None,
-                iou_thr=iou_thr,
-                dataset=dataset_name,
-                logger=logger,
-                nproc=nproc)
+        eval_results = {}
+        assert isinstance(iou_thr, float)
+        mean_ap, _ = eval_map(
+                        results,
+                        annotations,
+                        scale_ranges=None,
+                        iou_thr=iou_thr,
+                        dataset=ds_name,
+                        logger=logger)
+        eval_results['mAP'] = mean_ap
+        return eval_results
