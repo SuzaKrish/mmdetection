@@ -66,7 +66,7 @@ def multiclass_nms(multi_bboxes,
     scores = dets[:, -1]  # soft_nms will modify scores
     labels = labels[keep]
 
-    if keep.size(0) > max_num:
+    if keep.size(0) > max_num and max_num > 0:
         _, inds = scores.sort(descending=True)
         inds = inds[:max_num]
         bboxes = bboxes[inds]
