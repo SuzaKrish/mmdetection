@@ -221,7 +221,6 @@ class TwoStageDetector(BaseDetector, RPNTestMixin, BBoxTestMixin,
                 bbox_feats = self.shared_head(bbox_feats)
             if self.with_attention:
                 attention_feats = self.attention(bbox_feats)
-                bbox_feats = attention_feats + bbox_feats
             cls_score, bbox_pred = self.bbox_head(bbox_feats)
 
             bbox_targets = self.bbox_head.get_target(sampling_results,
