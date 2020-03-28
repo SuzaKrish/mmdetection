@@ -7,3 +7,4 @@ Train Method = trainval,  Seed = 1,   Determinitic = False
 | R-50     | 4         | False | 4891    | 70.5   | 68.3   | 63.1     |
 | R-50     | 8         | False | 4890    | 70.6   | 68.3   | 63.1     |
 | R-50     | 16        | False | 4890    | 70.8   | 68.3   | 63.1     |
+| R-50     | 32        | False | 4890    | 70.5   | 68.3   | 63.1     |
