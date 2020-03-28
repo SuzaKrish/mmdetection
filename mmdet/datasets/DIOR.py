@@ -9,7 +9,7 @@ from .xml_style import XMLDataset
 from .registry import DATASETS
 
 @DATASETS.register_module
-class DIORDataset(CustomDataset):
+class DIORDataset(XMLDataset):
 
     #CLASSES = ('aeroplane', 'bicycle', 'bird', 'boat', 'bottle', 'bus', 'car',
     #           'cat', 'chair', 'cow', 'diningtable', 'dog', 'horse',
