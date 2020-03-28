@@ -1,6 +1,12 @@
-from .registry import DATASETS
-from .xml_style import XMLDataset
+import os.path as osp
+import xml.etree.ElementTree as ET
+
+import mmcv
+import numpy as np
+
 from .custom import CustomDataset
+from .xml_style import XMLDataset
+from .registry import DATASETS
 
 @DATASETS.register_module
 class DIORDataset(CustomDataset):
