@@ -17,9 +17,10 @@ class DIORDataset(CustomDataset):
 
     def __init__(self, **kwargs):
         super(DIORDataset, self).__init__(**kwargs)
-        def load_annotations(self, ann_file):
-        img_infos = []
-        img_ids = mmcv.list_from_file(ann_file)
+
+    def load_annotations(self, ann_file):
+	img_infos = []
+	img_ids = mmcv.list_from_file(ann_file)
         for img_id in img_ids:
             filename = 'JPEGImages/{}.jpg'.format(img_id)
             xml_path = osp.join(self.img_prefix, 'Annotations',
