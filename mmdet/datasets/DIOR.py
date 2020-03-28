@@ -1,6 +1,6 @@
 from .registry import DATASETS
 from .xml_style import XMLDataset
-
+from .custom import CustomDataset
 
 @DATASETS.register_module
 class DIORDataset(CustomDataset):
