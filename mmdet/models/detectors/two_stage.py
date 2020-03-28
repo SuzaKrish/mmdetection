@@ -275,7 +275,7 @@ class TwoStageDetector(BaseDetector, RPNTestMixin, BBoxTestMixin,
                                 proposals=None,
                                 rescale=False):
         """Async test without augmentation."""
-        assert self.with_bbox, "Bbox head must be implemented."
+        assert self.with_bbox, 'Bbox head must be implemented.'
         x = self.extract_feat(img)
 
         if proposals is None:
@@ -285,7 +285,7 @@ class TwoStageDetector(BaseDetector, RPNTestMixin, BBoxTestMixin,
             proposal_list = proposals
 
         det_bboxes, det_labels = await self.async_test_bboxes(
-            x, img_metas, proposal_list, self.test_cfg.rcnn, rescale=rescale)
+            x, img_meta, proposal_list, self.test_cfg.rcnn, rescale=rescale)
         bbox_results = bbox2result(det_bboxes, det_labels,
                                    self.bbox_head.num_classes)
 
@@ -303,7 +303,7 @@ class TwoStageDetector(BaseDetector, RPNTestMixin, BBoxTestMixin,
 
     def simple_test(self, img, img_metas, proposals=None, rescale=False):
         """Test without augmentation."""
-        assert self.with_bbox, "Bbox head must be implemented."
+        assert self.with_bbox, 'Bbox head must be implemented.'
 
         x = self.extract_feat(img)
 
