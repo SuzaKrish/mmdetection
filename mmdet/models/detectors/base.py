@@ -130,7 +130,7 @@ class BaseDetector(nn.Module, metaclass=ABCMeta):
             return self.aug_test(imgs, img_metas, **kwargs)
 
     @auto_fp16(apply_to=('img', ))
-    def forward(self, img, img_meta, return_loss=True, **kwargs):
+    def forward(self, img, img_metas, return_loss=True, **kwargs):
         """
         Calls either forward_train or forward_test depending on whether
         return_loss=True. Note this setting will change the expected inputs.
