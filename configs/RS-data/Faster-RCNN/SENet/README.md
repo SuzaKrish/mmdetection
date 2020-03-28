@@ -1,5 +1,5 @@
 ## SE at Faster-RCNN after roi align 
-### Train Method = trainval,  Seed = 1,   Determinitic = False 
+Train Method = trainval,  Seed = 1,   Determinitic = False 
 
 | Backbone | Reduction | Bias  | Mem(MB) | box AP | Non-SE | Baseline |
 |----------|-----------|-------|---------|--------|--------|----------|
