@@ -7,12 +7,14 @@ import torch.nn as nn
 
 from mmdet.core import auto_fp16, get_classes, tensor2imgs
 from mmdet.utils import print_log
-
+from mmdet.utils import get_root_logger
 
 class BaseDetector(nn.Module, metaclass=ABCMeta):
     """Base class for detectors"""
 
     def __init__(self):
+        # logger = get_root_logger('work_dir.log')
+        # logger.info("self:{}")
         super(BaseDetector, self).__init__()
         self.fp16_enabled = False
 
@@ -31,6 +33,10 @@ class BaseDetector(nn.Module, metaclass=ABCMeta):
     @property
     def with_mask(self):
         return hasattr(self, 'mask_head') and self.mask_head is not None
+
+    @property
+    def with_attention(self):
+        return hasattr(self, 'attention') and self.attention is not None
 
     @abstractmethod
     def extract_feat(self, imgs):
@@ -119,18 +125,8 @@ class BaseDetector(nn.Module, metaclass=ABCMeta):
         assert imgs_per_gpu == 1
 
         if num_augs == 1:
-            """
-            proposals (List[List[Tensor]]): the outer list indicates test-time
-                augs (multiscale, flip, etc.) and the inner list indicates
-                images in a batch. The Tensor should have a shape Px4, where
-                P is the number of proposals.
-            """
-            if 'proposals' in kwargs:
-                kwargs['proposals'] = kwargs['proposals'][0]
             return self.simple_test(imgs[0], img_metas[0], **kwargs)
         else:
-            # TODO: support test augmentation for predefined proposals
-            assert 'proposals' not in kwargs
             return self.aug_test(imgs, img_metas, **kwargs)
 
     @auto_fp16(apply_to=('img', ))

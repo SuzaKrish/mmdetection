@@ -4,6 +4,21 @@ import mmcv
 def wider_face_classes():
     return ['face']
 
+def dior_classes():
+    
+    return ['airplane','airport','baseballfield','basketballcourt',
+            'bridge','chimney','dam','Expressway-Service-area',
+            'golffield','groundtrackfield','harbor','overpass',
+            'ship','stadium','storagetank','tenniscourt','trainstation',
+            'vehicle','windmill','Expressway-toll-station'
+    ]
+
+def dota_classes():
+    return ['large-vehicle', 'swimming-pool', 'helicopter', 'bridge',
+               'plane', 'ship', 'soccer-ball-field', 'basketball-court',
+               'ground-track-field', 'small-vehicle', 'harbor', 'baseball-diamond',
+               'tennis-court', 'roundabout', 'storage-tank', 'container-crane'
+    ]
 
 def voc_classes():
     return [
@@ -11,6 +26,13 @@ def voc_classes():
         'chair', 'cow', 'diningtable', 'dog', 'horse', 'motorbike', 'person',
         'pottedplant', 'sheep', 'sofa', 'train', 'tvmonitor'
     ]
+    #return ['airplane','airport','baseballfield','basketballcourt',
+    #        'bridge','chimney','dam','Expressway-Service-area',
+    #        'golffield','groundtrackfield','harbor','overpass',
+    #        'ship','stadium','storagetank','tenniscourt','trainstation',
+    #        'vehicle','windmill','Expressway-toll-station'
+    #]
+
 
 
 def imagenet_det_classes():

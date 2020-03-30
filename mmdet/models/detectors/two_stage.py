@@ -23,6 +23,7 @@ class TwoStageDetector(BaseDetector, RPNTestMixin, BBoxTestMixin,
                  shared_head=None,
                  rpn_head=None,
                  bbox_roi_extractor=None,
+                 attention=None,
                  bbox_head=None,
                  mask_roi_extractor=None,
                  mask_head=None,
@@ -41,10 +42,15 @@ class TwoStageDetector(BaseDetector, RPNTestMixin, BBoxTestMixin,
         if rpn_head is not None:
             self.rpn_head = builder.build_head(rpn_head)
 
+
+
         if bbox_head is not None:
             self.bbox_roi_extractor = builder.build_roi_extractor(
                 bbox_roi_extractor)
+            if attention is not None:
+                self.attention = builder.build_attention(attention)
             self.bbox_head = builder.build_head(bbox_head)
+
 
         if mask_head is not None:
             if mask_roi_extractor is not None:
@@ -97,7 +103,7 @@ class TwoStageDetector(BaseDetector, RPNTestMixin, BBoxTestMixin,
     def forward_dummy(self, img):
         """Used for computing network flops.
 
-        See `mmdetection/tools/get_flops.py`
+        See `mmedetection/tools/get_flops.py`
         """
         outs = ()
         # backbone
@@ -106,7 +112,7 @@ class TwoStageDetector(BaseDetector, RPNTestMixin, BBoxTestMixin,
         if self.with_rpn:
             rpn_outs = self.rpn_head(x)
             outs = outs + (rpn_outs, )
-        proposals = torch.randn(1000, 4).to(device=img.device)
+        proposals = torch.randn(1000, 4).cuda()
         # bbox head
         rois = bbox2roi([proposals])
         if self.with_bbox:
@@ -140,8 +146,8 @@ class TwoStageDetector(BaseDetector, RPNTestMixin, BBoxTestMixin,
             img (Tensor): of shape (N, C, H, W) encoding input images.
                 Typically these should be mean centered and std scaled.
 
-            img_metas (list[dict]): list of image info dict where each dict
-                has: 'img_shape', 'scale_factor', 'flip', and may also contain
+            img_metas (list[dict]): list of image info dict where each dict has:
+                'img_shape', 'scale_factor', 'flip', and may also contain
                 'filename', 'ori_shape', 'pad_shape', and 'img_norm_cfg'.
                 For details on the values of these keys see
                 `mmdet/datasets/pipelines/formatting.py:Collect`.
@@ -213,6 +219,8 @@ class TwoStageDetector(BaseDetector, RPNTestMixin, BBoxTestMixin,
                 x[:self.bbox_roi_extractor.num_inputs], rois)
             if self.with_shared_head:
                 bbox_feats = self.shared_head(bbox_feats)
+            if self.with_attention:
+                attention_feats = self.attention(bbox_feats)
             cls_score, bbox_pred = self.bbox_head(bbox_feats)
 
             bbox_targets = self.bbox_head.get_target(sampling_results,
