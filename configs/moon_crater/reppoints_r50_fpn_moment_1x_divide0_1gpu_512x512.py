@@ -1,6 +1,8 @@
 # model settings
+norm_cfg = dict(type='GN', num_groups=32, requires_grad=True)
+
 model = dict(
-    type='FasterRCNN',
+    type='RepPointsDetector',
     pretrained='torchvision://resnet50',
     backbone=dict(
         type='ResNet',
@@ -14,90 +16,54 @@ model = dict(
         type='FPN',
         in_channels=[256, 512, 1024, 2048],
         out_channels=256,
-        num_outs=5),
-    rpn_head=dict(
-        type='RPNHead',
+        start_level=1,
+        add_extra_convs=True,
+        num_outs=5,
+        norm_cfg=norm_cfg),
+    bbox_head=dict(
+        type='RepPointsHead',
+        num_classes=2,
         in_channels=256,
         feat_channels=256,
-        anchor_scales=[8],
-        anchor_ratios=[0.5, 1.0, 2.0],
-        anchor_strides=[4, 8, 16, 32, 64],
-        target_means=[.0, .0, .0, .0],
-        target_stds=[1.0, 1.0, 1.0, 1.0],
+        point_feat_channels=256,
+        stacked_convs=3,
+        num_points=9,
+        gradient_mul=0.1,
+        point_strides=[8, 16, 32, 64, 128],
+        point_base_scale=4,
+        norm_cfg=norm_cfg,
         loss_cls=dict(
-            type='CrossEntropyLoss', use_sigmoid=True, loss_weight=1.0),
-        loss_bbox=dict(type='SmoothL1Loss', beta=1.0 / 9.0, loss_weight=1.0)),
-    bbox_roi_extractor=dict(
-        type='SingleRoIExtractor',
-        roi_layer=dict(type='RoIAlign', out_size=7, sample_num=2),
-        out_channels=256,
-        featmap_strides=[4, 8, 16, 32]),
-    bbox_head=dict(
-        type='SharedFCBBoxHead',
-        num_fcs=2,
-        in_channels=256,
-        fc_out_channels=1024,
-        roi_feat_size=7,
-        num_classes=2,
-        target_means=[0., 0., 0., 0.],
-        target_stds=[0.1, 0.1, 0.2, 0.2],
-        reg_class_agnostic=False,
-        loss_cls=dict(
-            type='CrossEntropyLoss', use_sigmoid=False, loss_weight=1.0),
-        loss_bbox=dict(type='SmoothL1Loss', beta=1.0, loss_weight=1.0)))
-# model training and testing settings
+            type='FocalLoss',
+            use_sigmoid=True,
+            gamma=2.0,
+            alpha=0.25,
+            loss_weight=1.0),
+        loss_bbox_init=dict(type='SmoothL1Loss', beta=0.11, loss_weight=0.5),
+        loss_bbox_refine=dict(type='SmoothL1Loss', beta=0.11, loss_weight=1.0),
+        transform_method='moment'))
+# training and testing settings
 train_cfg = dict(
-    rpn=dict(
-        assigner=dict(
-            type='MaxIoUAssigner',
-            pos_iou_thr=0.7,
-            neg_iou_thr=0.3,
-            min_pos_iou=0.3,
-            ignore_iof_thr=-1),
-        sampler=dict(
-            type='RandomSampler',
-            num=256,
-            pos_fraction=0.5,
-            neg_pos_ub=-1,
-            add_gt_as_proposals=False),
-        allowed_border=0,
+    init=dict(
+        assigner=dict(type='PointAssigner', scale=4, pos_num=1),
+        allowed_border=-1,
         pos_weight=-1,
         debug=False),
-    rpn_proposal=dict(
-        nms_across_levels=False,
-        nms_pre=2000,
-        nms_post=2000,
-        max_num=2000,
-        nms_thr=0.7,
-        min_bbox_size=0),
-    rcnn=dict(
+    refine=dict(
         assigner=dict(
             type='MaxIoUAssigner',
             pos_iou_thr=0.5,
-            neg_iou_thr=0.5,
-            min_pos_iou=0.5,
+            neg_iou_thr=0.4,
+            min_pos_iou=0,
             ignore_iof_thr=-1),
-        sampler=dict(
-            type='RandomSampler',
-            num=512,
-            pos_fraction=0.25,
-            neg_pos_ub=-1,
-            add_gt_as_proposals=True),
+        allowed_border=-1,
         pos_weight=-1,
         debug=False))
 test_cfg = dict(
-    rpn=dict(
-        nms_across_levels=False,
-        nms_pre=1000,
-        nms_post=1000,
-        max_num=1000,
-        nms_thr=0.7,
-        min_bbox_size=0),
-    rcnn=dict(
-        score_thr=0.05, nms=dict(type='nms', iou_thr=0.5), max_per_img=-1)
-    # soft-nms is also supported for rcnn testing
-    # e.g., nms=dict(type='soft_nms', iou_thr=0.5, min_score=0.05)
-)
+    nms_pre=1000,
+    min_bbox_size=0,
+    score_thr=0.05,
+    nms=dict(type='nms', iou_thr=0.5),
+    max_per_img=100)
 # dataset settings
 dataset_type = 'MOONCraterDataset'
 data_root = '../data/DeepMoon_divide/'
@@ -129,16 +95,16 @@ test_pipeline = [
         ])
 ]
 data = dict(
-    imgs_per_gpu=2,
-    workers_per_gpu=2,
+    imgs_per_gpu=4,
+    workers_per_gpu=4,
     train=dict(
-            type=dataset_type,
-            ann_file=[
-                data_root + 'ImageSets/Main/train.txt'
-            ],
-            img_prefix=[data_root],
-            pipeline=train_pipeline
-            # min_size=17
+        type=dataset_type,
+        ann_file=[
+            data_root + 'ImageSets/Main/train.txt'
+        ],
+        img_prefix=[data_root],
+        pipeline=train_pipeline
+        # min_size=17
     ),
     val=dict(
         type=dataset_type,
@@ -147,10 +113,10 @@ data = dict(
         pipeline=test_pipeline),
     test=dict(
         type=dataset_type,
-        ann_file=data_root + 'ImageSets/Main/valid.txt',
+        ann_file=data_root + 'ImageSets/Main/test.txt',
         img_prefix=data_root,
         pipeline=test_pipeline))
-# optimizer 0.02 / 8
+# optimizer 0.01 / 8 x 2
 optimizer = dict(type='SGD', lr=0.0025, momentum=0.9, weight_decay=0.0001)
 optimizer_config = dict(grad_clip=dict(max_norm=35, norm_type=2))
 # learning policy
@@ -174,7 +140,7 @@ evaluation = dict(interval=3)
 total_epochs = 12
 dist_params = dict(backend='nccl')
 log_level = 'INFO'
-work_dir = '../results/moon_crater/faster_rcnn_r50_fpn_1x_divide0_1gpu_512x512'
+work_dir = '../results/moon_crater/reppoints_r50_fpn_moment_1x_divide0_1gpu_512x512'
 load_from = None
 resume_from = None
 workflow = [('train', 1)]

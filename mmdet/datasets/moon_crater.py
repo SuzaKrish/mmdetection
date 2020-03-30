@@ -144,7 +144,7 @@ class MOONCraterDataset(XMLDataset):
         save_dir = kwargs['save_dir']
         prog_bar = mmcv.ProgressBar(len(data_loader))
         for i, data in enumerate(data_loader):
-            img_path = data['img_meta'][0].data[0][0]['filename']
+            img_path = data['img_metas'][0].data[0][0]['filename']
             im_save_path = get_valFilePath(save_dir, img_path)
             check_fileDir(im_save_path)
             result_file = open(im_save_path, 'w')
