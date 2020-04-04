@@ -1,3 +1,3 @@
 from .senet import SENet
-
-__all__ = ['SENet']
+from .cbam import CBAM
+__all__ = ['SENet','CBAM']
