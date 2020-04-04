@@ -174,6 +174,7 @@ log_config = dict(
     ])
 # yapf:enable
 # runtime settings
+find_unused_parameters=True
 total_epochs = 12
 dist_params = dict(backend='nccl')
 log_level = 'INFO'
