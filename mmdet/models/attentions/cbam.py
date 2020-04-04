@@ -33,7 +33,7 @@ class CBAM(nn.Module):
         x = self.channel_layer(x) * x
         x = self.spatial_layer(x) * x
         output = residual + x
-        return x
+        return output
 
 
 class SpatialAttention(nn.Module):
