@@ -1,10 +1,10 @@
 # model settings
 model = dict(
     type='FasterRCNN',
-    pretrained='torchvision://resnet50',
+    pretrained='torchvision://resnet101',
     backbone=dict(
         type='ResNet',
-        depth=50,
+        depth=101,
         num_stages=4,
         out_indices=(0, 1, 2, 3),
         frozen_stages=1,
@@ -35,7 +35,7 @@ model = dict(
     attention=dict(
         type='SENet',
         inplanes=256,
-        reduction=64,
+        reduction=16,
         bias=False),
     bbox_head=dict(
         type='SharedFCBBoxHead',
@@ -105,7 +105,7 @@ test_cfg = dict(
 )
 # dataset settings
 dataset_type = 'DIORDataset'
-data_root = 'data.DIOR/VOCdevkit/'
+data_root = 'data/'
 img_norm_cfg = dict(
     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
 train_pipeline = [
@@ -134,7 +134,7 @@ test_pipeline = [
         ])
 ]
 data = dict(
-    imgs_per_gpu=2,
+    imgs_per_gpu=16,
     workers_per_gpu=2,
     train=dict(
        type=dataset_type,
@@ -164,7 +164,7 @@ data = dict(
         img_prefix=data_root + 'DIOR/',
         pipeline=test_pipeline))
 # optimizer
-optimizer = dict(type='SGD', lr=0.005, momentum=0.9, weight_decay=0.0001)
+optimizer = dict(type='SGD', lr=0.02, momentum=0.9, weight_decay=0.0001)
 optimizer_config = dict(grad_clip=dict(max_norm=35, norm_type=2))
 # learning policy
 lr_config = dict(
@@ -184,7 +184,8 @@ log_config = dict(
     ])
 # yapf:enable
 # runtime settings
-total_epochs = 12
+find_unused_parameters=True
+total_epochs = 1200
 dist_params = dict(backend='nccl')
 log_level = 'INFO'
 work_dir = './work_dirs/faster_rcnn_r50_fpn_1x'
