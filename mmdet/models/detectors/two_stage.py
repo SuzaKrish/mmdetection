@@ -172,6 +172,12 @@ class TwoStageDetector(BaseDetector, RPNTestMixin, BBoxTestMixin,
         x = self.extract_feat(img)
 
         losses = dict()
+        # attention after neck 
+        if self.with_attention:
+            y = list(x)
+            for i in range(len(x)):
+                y[i] = self.attention(x[i])
+            x = tuple(y)
 
         # RPN forward and loss
         if self.with_rpn:
@@ -219,8 +225,9 @@ class TwoStageDetector(BaseDetector, RPNTestMixin, BBoxTestMixin,
                 x[:self.bbox_roi_extractor.num_inputs], rois)
             if self.with_shared_head:
                 bbox_feats = self.shared_head(bbox_feats)
-            if self.with_attention:
-                attention_feats = self.attention(bbox_feats)
+            #attention after rpn align
+            #if self.with_attention:
+            #    attention_feats = self.attention(bbox_feats)
             cls_score, bbox_pred = self.bbox_head(bbox_feats)
 
             bbox_targets = self.bbox_head.get_target(sampling_results,
