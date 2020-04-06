@@ -163,6 +163,7 @@ lr_config = dict(
     step=[8, 11])
 #lr_config = dict(policy='step', step=[3]) 
 checkpoint_config = dict(interval=1)
+evaluation = dict(interval=12)
 # yapf:disable
 log_config = dict(
     interval=50,
