@@ -31,3 +31,4 @@ Train Method = trainval,  Seed = 1,   Determinitic = False
 | R-50     | 8         | TRUE  | 4992    | 69.4   | 68.3   | 63.1     |
 | R-50     | 16        | TRUE  | 4992    | 69.5   | 68.3   | 63.1     |
 | R-50     | 32        | TRUE  | 4992    | 69.1   | 68.3   | 63.1     |
+| R-101    | 4         | TRUE  | 6232    | 71.7   | 68.6   | 63.1     |
