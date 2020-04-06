@@ -20,3 +20,15 @@ Train Method = trainval,  Seed = 1,   Determinitic = False
 | R-101    | 16        | True  | 6127    | 72.3   | 68.6   | 65.1     |
 | R-101    | 32        | True  | 6127    | 72.8   | 68.6   | 65.1     |
 | R-101    | 64        | True  | 6127    | 72.4   | 68.6   | 65.1     |
+
+
+## SE at Faster-RCNN after FPN 
+Train Method = trainval,  Seed = 1,   Determinitic = False 
+
+| Backbone | Reduction | Bias  | Mem(MB) | box AP | Non-SE | Baseline |
+|----------|-----------|-------|---------|--------|--------|----------|
+| R-50     | 4         | TRUE  | 4992    | 69.3   | 68.3   | 63.1     |
+| R-50     | 8         | TRUE  | 4992    | 69.4   | 68.3   | 63.1     |
+| R-50     | 16        | TRUE  | 4992    | 69.5   | 68.3   | 63.1     |
+| R-50     | 32        | TRUE  | 4992    | 69.1   | 68.3   | 63.1     |
+| R-101    | 4         | TRUE  | 6232    | 71.7   | 68.6   | 63.1     |
