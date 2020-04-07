@@ -18,6 +18,7 @@ class SingleStageDetector(BaseDetector):
                  backbone,
                  neck=None,
                  bbox_head=None,
+                 attention=None,
                  train_cfg=None,
                  test_cfg=None,
                  pretrained=None):
@@ -26,6 +27,8 @@ class SingleStageDetector(BaseDetector):
         if neck is not None:
             self.neck = builder.build_neck(neck)
         self.bbox_head = builder.build_head(bbox_head)
+        if attention is not None:
+            self.attention = builder.build_attention(attention)
         self.train_cfg = train_cfg
         self.test_cfg = test_cfg
         self.init_weights(pretrained=pretrained)
@@ -39,6 +42,8 @@ class SingleStageDetector(BaseDetector):
                     m.init_weights()
             else:
                 self.neck.init_weights()
+        if self.with_attention:
+            self.attention.init_weights()
         self.bbox_head.init_weights()
 
     def extract_feat(self, img):
@@ -47,6 +52,14 @@ class SingleStageDetector(BaseDetector):
         x = self.backbone(img)
         if self.with_neck:
             x = self.neck(x)
+
+        # attention after neck
+        # if self.with_attention:
+        #     y = list(x)
+        #     for i in range(len(x)):
+        #         y[i] = self.attention(x[i])
+        #     x = tuple(y)
+
         return x
 
     def forward_dummy(self, img):

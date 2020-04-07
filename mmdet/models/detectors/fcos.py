@@ -9,8 +9,9 @@ class FCOS(SingleStageDetector):
                  backbone,
                  neck,
                  bbox_head,
+                 attention=None,
                  train_cfg=None,
                  test_cfg=None,
                  pretrained=None):
-        super(FCOS, self).__init__(backbone, neck, bbox_head, train_cfg,
-                                   test_cfg, pretrained)
+        super(FCOS, self).__init__(backbone, neck, bbox_head, attention,
+                                   train_cfg, test_cfg, pretrained)
