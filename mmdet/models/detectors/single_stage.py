@@ -26,9 +26,9 @@ class SingleStageDetector(BaseDetector):
         self.backbone = builder.build_backbone(backbone)
         if neck is not None:
             self.neck = builder.build_neck(neck)
-        self.bbox_head = builder.build_head(bbox_head)
         if attention is not None:
             self.attention = builder.build_attention(attention)
+        self.bbox_head = builder.build_head(bbox_head)
         self.train_cfg = train_cfg
         self.test_cfg = test_cfg
         self.init_weights(pretrained=pretrained)
