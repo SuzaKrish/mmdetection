@@ -73,8 +73,9 @@ class FCOSHead(nn.Module):
         self.fp16_enabled = False
         self.center_sampling = center_sampling
         self.center_sample_radius = center_sample_radius
-        self.cls_attention = build_attention(cls_attention)
-        self.reg_attention = build_attention(reg_attention)
+        if cls_attention is not None and reg_attention is not None:
+            self.cls_attention = build_attention(cls_attention)
+            self.reg_attention = build_attention(reg_attention)
 
         self._init_layers()
 
@@ -104,8 +105,10 @@ class FCOSHead(nn.Module):
                     norm_cfg=self.norm_cfg,
                     bias=self.norm_cfg is None))
         #attention
-        self.cls_attention = self.cls_attention
-        self.reg_attention = self.reg_attention
+        if hasattr(self, 'cls_attention') and self.cls_attention is not None:
+            self.cls_attention = self.cls_attention
+        if hasattr(self, 'reg_attention') and self.reg_attention is not None:
+            self.reg_attention = self.reg_attention
 
         self.fcos_cls = nn.Conv2d(
             self.feat_channels, self.cls_out_channels, 3, padding=1)
@@ -125,9 +128,9 @@ class FCOSHead(nn.Module):
         normal_init(self.fcos_centerness, std=0.01)
 
         #attention
-        if self.cls_attention is not None:
+        if hasattr(self, 'cls_attention') and self.cls_attention is not None:
             self.cls_attention.init_weights()
-        if self.reg_attention is not None:
+        if hasattr(self, 'reg_attention') and self.reg_attention is not None:
             self.reg_attention.init_weights()
 
     def forward(self, feats):
@@ -141,7 +144,7 @@ class FCOSHead(nn.Module):
             cls_feat = cls_layer(cls_feat)
 
         # attention for cls
-        if self.cls_attention is not None:
+        if hasattr(self, 'cls_attention') and self.cls_attention is not None:
             cls_feat = self.cls_attention(cls_feat)
 
         cls_score = self.fcos_cls(cls_feat)
@@ -151,7 +154,7 @@ class FCOSHead(nn.Module):
             reg_feat = reg_layer(reg_feat)
 
         #attention for reg
-        if self.reg_attention is not None:
+        if hasattr(self, 'reg_attention') and self.reg_attention is not None:
             reg_feat = self.reg_attention(reg_feat)
 
         # scale the bbox_pred of different level
