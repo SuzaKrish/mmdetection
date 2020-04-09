@@ -35,8 +35,8 @@ model = dict(
     attention=dict(
         type='SENet',
         inplanes=256,
-        reduction=64,
-        bias=False),
+        reduction=1,
+        bias=True),
     bbox_head=dict(
         type='SharedFCBBoxHead',
         num_fcs=2,
@@ -105,7 +105,7 @@ test_cfg = dict(
 )
 # dataset settings
 dataset_type = 'DIORDataset'
-data_root = 'data.DIOR/VOCdevkit/'
+data_root = 'data/'
 img_norm_cfg = dict(
     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
 train_pipeline = [
@@ -137,22 +137,10 @@ data = dict(
     imgs_per_gpu=2,
     workers_per_gpu=2,
     train=dict(
-       type=dataset_type,
-       ann_file=[
-           data_root + 'DIOR/ImageSets/Main/trainval.txt'
-       ],
-       img_prefix=[data_root + 'DIOR/'],
-       pipeline=train_pipeline),
-    #train=dict(
-    #    type='RepeatDataset',
-    #    times=3,
-    #    dataset=dict(
-    #        type=dataset_type,
-    #        ann_file=[
-    #            data_root + 'VOC2007/ImageSets/Main/trainval.txt'
-    #        ],
-    #        img_prefix=[data_root + 'VOC2007/'],
-    #        pipeline=train_pipeline)),
+        type=dataset_type,
+        ann_file= data_root + 'DIOR/ImageSets/Main/trainval.txt',
+        img_prefix= data_root + 'DIOR/',
+        pipeline=train_pipeline),
     val=dict(
         type=dataset_type,
         ann_file=data_root + 'DIOR/ImageSets/Main/test.txt',
@@ -164,7 +152,7 @@ data = dict(
         img_prefix=data_root + 'DIOR/',
         pipeline=test_pipeline))
 # optimizer
-optimizer = dict(type='SGD', lr=0.005, momentum=0.9, weight_decay=0.0001)
+optimizer = dict(type='SGD', lr=0.0025, momentum=0.9, weight_decay=0.0001)
 optimizer_config = dict(grad_clip=dict(max_norm=35, norm_type=2))
 # learning policy
 lr_config = dict(
@@ -175,6 +163,7 @@ lr_config = dict(
     step=[8, 11])
 #lr_config = dict(policy='step', step=[3]) 
 checkpoint_config = dict(interval=1)
+evaluation = dict(interval=12)
 # yapf:disable
 log_config = dict(
     interval=50,
@@ -184,6 +173,7 @@ log_config = dict(
     ])
 # yapf:enable
 # runtime settings
+find_unused_parameters=True
 total_epochs = 12
 dist_params = dict(backend='nccl')
 log_level = 'INFO'

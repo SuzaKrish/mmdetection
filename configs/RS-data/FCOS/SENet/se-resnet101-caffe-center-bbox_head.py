@@ -1,16 +1,15 @@
 # model settings
 model = dict(
     type='FCOS',
-    pretrained='open-mmlab://resnext101_64x4d',
+    pretrained='open-mmlab://resnet101_caffe',
     backbone=dict(
-        type='ResNeXt',
+        type='ResNet',
         depth=101,
-        groups=64,
-        base_width=4,
         num_stages=4,
         out_indices=(0, 1, 2, 3),
         frozen_stages=1,
-        style='pytorch'),
+        norm_cfg=dict(type='BN', requires_grad=False),
+        style='caffe'),
     neck=dict(
         type='FPN',
         in_channels=[256, 512, 1024, 2048],
@@ -35,7 +34,19 @@ model = dict(
             loss_weight=1.0),
         loss_bbox=dict(type='IoULoss', loss_weight=1.0),
         loss_centerness=dict(
-            type='CrossEntropyLoss', use_sigmoid=True, loss_weight=1.0)))
+            type='CrossEntropyLoss', use_sigmoid=True, loss_weight=1.0),
+        center_sampling=True,
+        center_sample_radius=1.5,
+        cls_attention=dict(
+            type="SENet",
+            inplanes=256,
+            reduction=16,
+            bias=True),
+        reg_attention=dict(
+            type="SENet",
+            inplanes=256,
+            reduction=16,
+            bias=True)))
 # training and testing settings
 train_cfg = dict(
     assigner=dict(
@@ -52,20 +63,16 @@ test_cfg = dict(
     min_bbox_size=0,
     score_thr=0.05,
     nms=dict(type='nms', iou_thr=0.5),
-    max_per_img=100)
+    max_per_img=-1)
 # dataset settings
-dataset_type = 'VOCDataset'	
-data_root = 'data/VOCdevkit/'
+dataset_type = 'DIORDataset'
+data_root = 'data/'
 img_norm_cfg = dict(
-    mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
+    mean=[102.9801, 115.9465, 122.7717], std=[1.0, 1.0, 1.0], to_rgb=False)
 train_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(type='LoadAnnotations', with_bbox=True),
-    dict(
-        type='Resize',
-        img_scale=[(1333, 640), (1333, 800)],
-        multiscale_mode='value',
-        keep_ratio=True),
+    dict(type='Resize', img_scale=(800, 800), keep_ratio=True),
     dict(type='RandomFlip', flip_ratio=0.5),
     dict(type='Normalize', **img_norm_cfg),
     dict(type='Pad', size_divisor=32),
@@ -76,7 +83,7 @@ test_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(
         type='MultiScaleFlipAug',
-        img_scale=(1333, 800),
+        img_scale=(800,800),
         flip=False,
         transforms=[
             dict(type='Resize', keep_ratio=True),
@@ -87,45 +94,41 @@ test_pipeline = [
             dict(type='Collect', keys=['img']),
         ])
 ]
-data = dict(	
-    imgs_per_gpu=2,	
-    workers_per_gpu=2,	
-    train=dict(	
-        type='RepeatDataset',	
-        times=3,	
-        dataset=dict(	
-            type=dataset_type,	
-            ann_file=[	
-                data_root + 'VOC2007/ImageSets/Main/trainval.txt'	
-            ],	
-            img_prefix=[data_root + 'VOC2007/'],	
-            pipeline=train_pipeline)),	
-    val=dict(	
-        type=dataset_type,	
-        ann_file=data_root + 'VOC2007/ImageSets/Main/test.txt',	
-        img_prefix=data_root + 'VOC2007/',	
-        pipeline=test_pipeline),	
-    test=dict(	
-        type=dataset_type,	
-        ann_file=data_root + 'VOC2007/ImageSets/Main/test.txt',	
-        img_prefix=data_root + 'VOC2007/',	
+data = dict(
+    imgs_per_gpu=2,
+    workers_per_gpu=2,
+    train=dict(
+        type=dataset_type,
+        ann_file= data_root + 'DIOR/ImageSets/Main/trainval.txt',
+        img_prefix= data_root + 'DIOR/',
+        pipeline=train_pipeline),
+    val=dict(
+        type=dataset_type,
+        ann_file=data_root + 'DIOR/ImageSets/Main/test.txt',
+        img_prefix=data_root + 'DIOR/',
+        pipeline=test_pipeline),
+    test=dict(
+        type=dataset_type,
+        ann_file=data_root + 'DIOR/ImageSets/Main/test.txt',
+        img_prefix=data_root + 'DIOR/',
         pipeline=test_pipeline))
 # optimizer
 optimizer = dict(
     type='SGD',
-    lr=0.01,
+    lr=0.0025,
     momentum=0.9,
     weight_decay=0.0001,
     paramwise_options=dict(bias_lr_mult=2., bias_decay_mult=0.))
-optimizer_config = dict(grad_clip=None)
+optimizer_config = dict(grad_clip=dict(max_norm=35, norm_type=2))
 # learning policy
 lr_config = dict(
     policy='step',
     warmup='constant',
     warmup_iters=500,
     warmup_ratio=1.0 / 3,
-    step=[16, 22])
+    step=[8, 11])
 checkpoint_config = dict(interval=1)
+evaluation = dict(interval=12)
 # yapf:disable
 log_config = dict(
     interval=50,
@@ -135,10 +138,11 @@ log_config = dict(
     ])
 # yapf:enable
 # runtime settings
-total_epochs = 36
+find_unused_parameters=True
+total_epochs = 12
 dist_params = dict(backend='nccl')
 log_level = 'INFO'
-work_dir = './work_dirs/fcos_mstrain_640_800_x101_64x4d_fpn_gn_2x'
+work_dir = './work_dirs/fcos_r101_caffe_fpn_gn_1x_4gpu'
 load_from = None
 resume_from = None
 workflow = [('train', 1)]

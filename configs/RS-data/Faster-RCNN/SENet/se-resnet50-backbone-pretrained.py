@@ -1,16 +1,24 @@
-# model settings
 model = dict(
     type='FasterRCNN',
-    pretrained='modelzoo://resnet101',
-    #pretrained='torchvision://resnet101',
+    #pretrained='torchvision://resnet50',
+    pretrained='/disk1/NiCholas/mmdetection/pretrained/se_resnet50-ce0d4300.pth',
     backbone=dict(
-        type='ResNet',
-        depth=101,
-        num_stages=4,
-        out_indices=(0, 1, 2, 3),
-        frozen_stages=1,
-        norm_cfg=dict(type='BN', requires_grad=True),
-        style='pytorch'),
+        type='SENet',
+	block='SEResNetBottleneck',
+	layers=[3, 4, 6, 3],
+	groups=1,
+	reduction=16,
+	dropout_p=None,
+	inplanes=64,
+	input_3x3=False,
+	downsample_kernel_size=1,
+	downsample_padding=0,
+	frozen_stages=1
+        #depth=50,
+        #num_stages=4,
+        #out_indices=(0, 1, 2, 3),
+        #style='pytorch'
+	),
     neck=dict(
         type='FPN',
         in_channels=[256, 512, 1024, 2048],
@@ -101,7 +109,7 @@ test_cfg = dict(
 )
 # dataset settings
 dataset_type = 'DIORDataset'
-data_root = 'data.DIOR/VOCdevkit/'
+data_root = 'data/'
 img_norm_cfg = dict(
     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
 train_pipeline = [
@@ -134,33 +142,21 @@ data = dict(
     workers_per_gpu=2,
     train=dict(
         type=dataset_type,
-        ann_file=[
-            data_root + 'VOC2007/ImageSets/Main/trainval.txt'
-        ],
-        img_prefix=[data_root + 'VOC2007/'],
+        ann_file= data_root + 'DIOR/ImageSets/Main/trainval.txt',
+        img_prefix= data_root + 'DIOR/',
         pipeline=train_pipeline),
-#    train=dict(
-#        type='RepeatDataset',
-#        times=3,
-#        dataset=dict(
-#            type=dataset_type,
-#            ann_file=[
-#                data_root + 'VOC2007/ImageSets/Main/trainval.txt'
-#            ],
-#            img_prefix=[data_root + 'VOC2007/'],
-#            pipeline=train_pipeline)),
     val=dict(
         type=dataset_type,
-        ann_file=data_root + 'VOC2007/ImageSets/Main/test.txt',
-        img_prefix=data_root + 'VOC2007/',
+        ann_file=data_root + 'DIOR/ImageSets/Main/test.txt',
+        img_prefix=data_root + 'DIOR/',
         pipeline=test_pipeline),
     test=dict(
         type=dataset_type,
-        ann_file=data_root + 'VOC2007/ImageSets/Main/test.txt',
-        img_prefix=data_root + 'VOC2007/',
+        ann_file=data_root + 'DIOR/ImageSets/Main/test.txt',
+        img_prefix=data_root + 'DIOR/',
         pipeline=test_pipeline))
 # optimizer
-optimizer = dict(type='SGD', lr=0.005, momentum=0.9, weight_decay=0.0001)
+optimizer = dict(type='SGD', lr=0.0025, momentum=0.9, weight_decay=0.0001)
 optimizer_config = dict(grad_clip=dict(max_norm=35, norm_type=2))
 # learning policy
 lr_config = dict(
@@ -169,8 +165,9 @@ lr_config = dict(
     warmup_iters=500,
     warmup_ratio=1.0 / 3,
     step=[8, 11])
-#lr_config = dict(policy='step', step=[3]) 
+#lr_config = dict(policy='step', step=[3])  # actual epoch = 3 * 3 = 9
 checkpoint_config = dict(interval=1)
+evaluation = dict(interval=12)
 # yapf:disable
 log_config = dict(
     interval=50,
@@ -180,10 +177,11 @@ log_config = dict(
     ])
 # yapf:enable
 # runtime settings
-total_epochs = 12
+find_unused_parameters=True
+total_epochs = 12  # actual epoch = 4 * 3 = 12
 dist_params = dict(backend='nccl')
 log_level = 'INFO'
-work_dir = './work_dirs/faster_rcnn_r101_fpn_1x'
+work_dir = './work_dirs/faster_rcnn_ser50_fpn_1x_voc0712'
 load_from = None
 resume_from = None
 workflow = [('train', 1)]

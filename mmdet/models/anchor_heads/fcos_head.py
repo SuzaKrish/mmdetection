@@ -5,6 +5,7 @@ from mmcv.cnn import normal_init
 from mmdet.core import distance2bbox, force_fp32, multi_apply, multiclass_nms
 from mmdet.ops import ConvModule, Scale
 from ..builder import build_loss
+from ..builder import build_attention
 from ..registry import HEADS
 from ..utils import bias_init_with_prob
 
@@ -52,7 +53,9 @@ class FCOSHead(nn.Module):
                      use_sigmoid=True,
                      loss_weight=1.0),
                  conv_cfg=None,
-                 norm_cfg=dict(type='GN', num_groups=32, requires_grad=True)):
+                 norm_cfg=dict(type='GN', num_groups=32, requires_grad=True),
+                 cls_attention=None,
+                 reg_attention=None):
         super(FCOSHead, self).__init__()
 
         self.num_classes = num_classes
@@ -70,6 +73,9 @@ class FCOSHead(nn.Module):
         self.fp16_enabled = False
         self.center_sampling = center_sampling
         self.center_sample_radius = center_sample_radius
+        if cls_attention is not None and reg_attention is not None:
+            self.cls_attention = build_attention(cls_attention)
+            self.reg_attention = build_attention(reg_attention)
 
         self._init_layers()
 
@@ -98,6 +104,12 @@ class FCOSHead(nn.Module):
                     conv_cfg=self.conv_cfg,
                     norm_cfg=self.norm_cfg,
                     bias=self.norm_cfg is None))
+        #attention
+        if hasattr(self, 'cls_attention') and self.cls_attention is not None:
+            self.cls_attention = self.cls_attention
+        if hasattr(self, 'reg_attention') and self.reg_attention is not None:
+            self.reg_attention = self.reg_attention
+
         self.fcos_cls = nn.Conv2d(
             self.feat_channels, self.cls_out_channels, 3, padding=1)
         self.fcos_reg = nn.Conv2d(self.feat_channels, 4, 3, padding=1)
@@ -115,6 +127,12 @@ class FCOSHead(nn.Module):
         normal_init(self.fcos_reg, std=0.01)
         normal_init(self.fcos_centerness, std=0.01)
 
+        #attention
+        if hasattr(self, 'cls_attention') and self.cls_attention is not None:
+            self.cls_attention.init_weights()
+        if hasattr(self, 'reg_attention') and self.reg_attention is not None:
+            self.reg_attention.init_weights()
+
     def forward(self, feats):
         return multi_apply(self.forward_single, feats, self.scales)
 
@@ -124,11 +142,21 @@ class FCOSHead(nn.Module):
 
         for cls_layer in self.cls_convs:
             cls_feat = cls_layer(cls_feat)
+
+        # attention for cls
+        if hasattr(self, 'cls_attention') and self.cls_attention is not None:
+            cls_feat = self.cls_attention(cls_feat)
+
         cls_score = self.fcos_cls(cls_feat)
         centerness = self.fcos_centerness(cls_feat)
 
         for reg_layer in self.reg_convs:
             reg_feat = reg_layer(reg_feat)
+
+        #attention for reg
+        if hasattr(self, 'reg_attention') and self.reg_attention is not None:
+            reg_feat = self.reg_attention(reg_feat)
+
         # scale the bbox_pred of different level
         # float to avoid overflow when enabling FP16
         bbox_pred = scale(self.fcos_reg(reg_feat)).float().exp()
