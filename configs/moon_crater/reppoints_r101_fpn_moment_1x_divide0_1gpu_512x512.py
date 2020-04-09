@@ -63,7 +63,7 @@ test_cfg = dict(
     min_bbox_size=0,
     score_thr=0.05,
     nms=dict(type='nms', iou_thr=0.5),
-    max_per_img=100)
+    max_per_img=-1)
 # dataset settings
 dataset_type = 'MOONCraterDataset'
 data_root = '../data/DeepMoon_divide/'
@@ -113,7 +113,7 @@ data = dict(
         pipeline=test_pipeline),
     test=dict(
         type=dataset_type,
-        ann_file=data_root + 'ImageSets/Main/test.txt',
+        ann_file=data_root + 'ImageSets/Main/valid.txt',
         img_prefix=data_root,
         pipeline=test_pipeline))
 # optimizer 0.01 / 8 x 2

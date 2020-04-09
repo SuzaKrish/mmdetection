@@ -38,9 +38,9 @@ train_cfg = dict(
     neg_pos_ratio=3,
     debug=False)
 test_cfg = dict(
-    nms=dict(type='nms', iou_thr=0.45),
+    nms=dict(type='nms', iou_thr=0.5),  # 0.45
     min_bbox_size=0,
-    score_thr=0.02,
+    score_thr=0.05,  # 0.02
     max_per_img=-1)
 # model training and testing settings
 # dataset settings
