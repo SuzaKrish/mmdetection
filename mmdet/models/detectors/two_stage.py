@@ -225,8 +225,8 @@ class TwoStageDetector(BaseDetector, RPNTestMixin, BBoxTestMixin,
                 bbox_feats = self.shared_head(bbox_feats)
 
             #attention after rpn align
-            #if self.with_attention:
-            #    bbox_feats = self.attention(bbox_feats)
+            if self.with_attention:
+                bbox_feats = self.attention(bbox_feats)
 
             cls_score, bbox_pred = self.bbox_head(bbox_feats)
 
