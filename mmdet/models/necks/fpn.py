@@ -1,7 +1,7 @@
 import torch.nn as nn
 import torch.nn.functional as F
 from mmcv.cnn import xavier_init
-
+from ..builder import build_attention
 from mmdet.core import auto_fp16
 from mmdet.ops import ConvModule
 from ..registry import NECKS
@@ -53,6 +53,7 @@ class FPN(nn.Module):
                  num_outs,
                  start_level=0,
                  end_level=-1,
+                 attention=None,
                  add_extra_convs=False,
                  extra_convs_on_inputs=True,
                  relu_before_extra_convs=False,
@@ -68,7 +69,9 @@ class FPN(nn.Module):
         self.num_outs = num_outs
         self.relu_before_extra_convs = relu_before_extra_convs
         self.no_norm_on_lateral = no_norm_on_lateral
+        self.attention = attention
         self.fp16_enabled = False
+
 
         if end_level == -1:
             self.backbone_end_level = self.num_ins
@@ -128,11 +131,16 @@ class FPN(nn.Module):
                     inplace=False)
                 self.fpn_convs.append(extra_fpn_conv)
 
+        #attention
+        if self.attention is not None:
+            self.attention = build_attention(attention)
+
     # default init_weights for conv(msra) and norm in ConvModule
     def init_weights(self):
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
                 xavier_init(m, distribution='uniform')
+
 
     @auto_fp16()
     def forward(self, inputs):
@@ -175,4 +183,7 @@ class FPN(nn.Module):
                         outs.append(self.fpn_convs[i](F.relu(outs[-1])))
                     else:
                         outs.append(self.fpn_convs[i](outs[-1]))
+
+        #attention
+        outs = self.attention(outs)
         return tuple(outs)
