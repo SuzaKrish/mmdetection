@@ -100,14 +100,7 @@ class TwoStageDetector(BaseDetector, RPNTestMixin, BBoxTestMixin,
         x = self.backbone(img)
         if self.with_neck:
             x = self.neck(x)
-
-        # attention after neck
-        if self.with_attention:
-            y = list(x)
-            for i in range(len(x)):
-                y[i] = self.attention(x[i])
-            x = tuple(y)
-
+            
         return x
 
     def forward_dummy(self, img):
