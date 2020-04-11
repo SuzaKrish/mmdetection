@@ -185,5 +185,8 @@ class FPN(nn.Module):
                         outs.append(self.fpn_convs[i](outs[-1]))
 
         #attention
-        outs = self.attention(outs)
+        if hasattr(self,'attention') and self.attention is not None:
+            for i in range(len(outs)):
+                outs[i] = self.attention(outs[i])
+        
         return tuple(outs)
