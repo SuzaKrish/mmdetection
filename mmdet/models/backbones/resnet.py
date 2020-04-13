@@ -3,7 +3,7 @@ import torch.utils.checkpoint as cp
 from mmcv.cnn import constant_init, kaiming_init
 from mmcv.runner import load_checkpoint
 from torch.nn.modules.batchnorm import _BatchNorm
-
+from ..builder import build_attention
 from mmdet.ops import (ContextBlock, GeneralizedAttention, build_conv_layer,
                        build_norm_layer)
 from mmdet.utils import get_root_logger
@@ -80,7 +80,6 @@ class BasicBlock(nn.Module):
 
         return out
 
-
 class Bottleneck(nn.Module):
     expansion = 4
 
@@ -96,7 +95,8 @@ class Bottleneck(nn.Module):
                  norm_cfg=dict(type='BN'),
                  dcn=None,
                  gcb=None,
-                 gen_attention=None):
+                 gen_attention=None,
+                 attention=None):
         """Bottleneck block for ResNet.
         If style is "pytorch", the stride-two layer is the 3x3 conv layer,
         if it is "caffe", the stride-two layer is the first 1x1 conv layer.
@@ -121,6 +121,7 @@ class Bottleneck(nn.Module):
         self.with_gcb = gcb is not None
         self.gen_attention = gen_attention
         self.with_gen_attention = gen_attention is not None
+        self.attention = attention
 
         if self.style == 'pytorch':
             self.conv1_stride = 1
@@ -188,6 +189,10 @@ class Bottleneck(nn.Module):
             self.gen_attention_block = GeneralizedAttention(
                 planes, **gen_attention)
 
+        if hasattr(self, 'attention') and self.attention is not None:
+            self.attention['inplanes'] = planes * self.expansion
+            self.attention = build_attention(attention)
+
     @property
     def norm1(self):
         return getattr(self, self.norm1_name)
@@ -225,6 +230,10 @@ class Bottleneck(nn.Module):
             if self.downsample is not None:
                 identity = self.downsample(x)
 
+            #attention
+            if hasattr(self, 'attention') and self.attention is not None:
+                out = self.attention(out)
+
             out += identity
 
             return out
@@ -252,7 +261,8 @@ def make_res_layer(block,
                    dcn=None,
                    gcb=None,
                    gen_attention=None,
-                   gen_attention_blocks=[]):
+                   gen_attention_blocks=[],
+                   attention=None):
     downsample = None
     if stride != 1 or inplanes != planes * block.expansion:
         downsample = nn.Sequential(
@@ -280,6 +290,7 @@ def make_res_layer(block,
             norm_cfg=norm_cfg,
             dcn=dcn,
             gcb=gcb,
+            attention=attention,
             gen_attention=gen_attention if
             (0 in gen_attention_blocks) else None))
     inplanes = planes * block.expansion
@@ -296,6 +307,7 @@ def make_res_layer(block,
                 norm_cfg=norm_cfg,
                 dcn=dcn,
                 gcb=gcb,
+                attention=attention,
                 gen_attention=gen_attention if
                 (i in gen_attention_blocks) else None))
 
@@ -369,7 +381,8 @@ class ResNet(nn.Module):
                  gen_attention=None,
                  stage_with_gen_attention=((), (), (), ()),
                  with_cp=False,
-                 zero_init_residual=True):
+                 zero_init_residual=True,
+                 attention=None):
         super(ResNet, self).__init__()
         if depth not in self.arch_settings:
             raise KeyError('invalid depth {} for resnet'.format(depth))
@@ -400,6 +413,7 @@ class ResNet(nn.Module):
         self.block, stage_blocks = self.arch_settings[depth]
         self.stage_blocks = stage_blocks[:num_stages]
         self.inplanes = 64
+        self.attention = attention
 
         self._make_stem_layer(in_channels)
 
@@ -424,7 +438,8 @@ class ResNet(nn.Module):
                 dcn=dcn,
                 gcb=gcb,
                 gen_attention=gen_attention,
-                gen_attention_blocks=stage_with_gen_attention[i])
+                gen_attention_blocks=stage_with_gen_attention[i],
+                attention=attention)
             self.inplanes = planes * self.block.expansion
             layer_name = 'layer{}'.format(i + 1)
             self.add_module(layer_name, res_layer)
@@ -470,6 +485,7 @@ class ResNet(nn.Module):
         if isinstance(pretrained, str):
             logger = get_root_logger()
             load_checkpoint(self, pretrained, strict=False, logger=logger)
+
         elif pretrained is None:
             for m in self.modules():
                 if isinstance(m, nn.Conv2d):
@@ -480,8 +496,8 @@ class ResNet(nn.Module):
             if self.dcn is not None:
                 for m in self.modules():
                     if isinstance(m, Bottleneck) and hasattr(
-                            m.conv2, 'conv_offset'):
-                        constant_init(m.conv2.conv_offset, 0)
+                            m, 'conv2_offset'):
+                        constant_init(m.conv2_offset, 0)
 
             if self.zero_init_residual:
                 for m in self.modules():
@@ -491,6 +507,10 @@ class ResNet(nn.Module):
                         constant_init(m.norm2, 0)
         else:
             raise TypeError('pretrained must be a str or None')
+
+        # attention
+        if hasattr(self, 'attention') and self.attention is not None:
+            self.attention.init_weights()
 
     def forward(self, x):
         x = self.conv1(x)
