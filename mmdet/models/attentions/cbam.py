@@ -32,7 +32,6 @@ class CBAM(nn.Module):
         residual = x
         x = self.channel_layer(x) * x
         x = self.spatial_layer(x) * x
-        output = residual + x
         return output
 
 

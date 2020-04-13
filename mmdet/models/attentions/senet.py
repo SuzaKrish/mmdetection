@@ -52,7 +52,7 @@ class SENet(nn.Module):
         x = self.relu(x)
         x = self.fc2(x)
         x = self.sigmoid(x)
-        output = module_input * x + module_input
+        output = module_input * x
         return output
 
 
