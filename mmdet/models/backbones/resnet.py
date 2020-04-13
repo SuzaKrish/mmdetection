@@ -510,7 +510,18 @@ class ResNet(nn.Module):
 
         # attention
         if hasattr(self, 'attention') and self.attention is not None:
-            self.attention.init_weights()
+            for m in enumerate(self.layer1):
+                if hasattr(m, 'attentiion'):
+                    self.m.attention.init_weights()
+            for m in enumerate(self.layer2):
+                if hasattr(m, 'attentiion'):
+                    self.m.attention.init_weights()
+            for m in enumerate(self.layer3):
+                if hasattr(m, 'attentiion'):
+                    self.m.attention.init_weights()
+            for m in enumerate(self.layer4):
+                if hasattr(m, 'attentiion'):
+                    self.m.attention.init_weights()
 
     def forward(self, x):
         x = self.conv1(x)
