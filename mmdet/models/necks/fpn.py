@@ -187,6 +187,6 @@ class FPN(nn.Module):
         #attention
         if hasattr(self,'attention') and self.attention is not None:
             for i in range(len(outs)):
-                outs[i] += self.attention(outs[i])
+                outs[i] = self.attention(outs[i]) + outs[i]
 
         return tuple(outs)
