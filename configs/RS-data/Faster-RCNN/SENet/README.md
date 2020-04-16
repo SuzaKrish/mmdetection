@@ -9,6 +9,7 @@ Train Method = trainval,  Seed = 1,   Determinitic = False
 | R-50     | 32        | True  | 5051    | 70.7   | 70.8   | 63.1     |
 | R-101    | 4         | True  | 6466    | 72.6   | 70.8   | 63.1     |
 | R-101    | 16        | True  | 6462    | 72.4   | 70.8   | 63.1     |
+| R-101    | 32        | True  | 6468    | 72.4   | 70.8   | 63.1     |
 
 
 
