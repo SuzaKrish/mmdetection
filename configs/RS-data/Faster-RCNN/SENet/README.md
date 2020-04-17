@@ -16,7 +16,7 @@ Train Method = trainval,  Seed = 1,   Determinitic = False
 ## SE at Faster-RCNN after FPN 
 Train Method = trainval,  Seed = 1,   Determinitic = False 
 
-| Backbone | Reduction | Bias  | Mem(MB) | box AP | Non-SE | Baseline |
+| Backbone | Reduction | Bias  | Mem(MB) | box AP | Ours   | Baseline |
 |----------|-----------|-------|---------|--------|--------|----------|
 | R-50     | 4         | TRUE  | 5152    | 71.1   | 70.8   | 63.1     |
 | R-50     | 16        | TRUE  | 5152    | 71.1   | 70.8   | 63.1     |
@@ -30,7 +30,7 @@ Train Method = trainval,  Seed = 1,   Determinitic = False
 ## SE at Faster-RCNN at backbone 
 Train Method = trainval,  Seed = 1,   Determinitic = False 
 
-| Backbone | Reduction | Bias  | Mem(MB) | box AP | Non-SE | Baseline |
+| Backbone | Reduction | Bias  | Mem(MB) | box AP | Ours   | Baseline |
 |----------|-----------|-------|---------|--------|--------|----------|
 | R-50     | 4         | TRUE  | 5509    | 70.0   | 70.8   | 63.1     |
 | R-50     | 16        | TRUE  | 5509    | 70.3   | 70.8   | 63.1     |
@@ -41,6 +41,6 @@ Train Method = trainval,  Seed = 1,   Determinitic = False
 ## SE at Faster-RCNN at backbone (pretrained)
 Train Method = trainval,  Seed = 1,   Determinitic = False 
 
-| Backbone | Reduction | Bias  | Mem(MB) | box AP | Non-SE | Baseline |
+| Backbone | Reduction | Bias  | Mem(MB) | box AP | Ours   | Baseline |
 |----------|-----------|-------|---------|--------|--------|----------|
 | R-50     | 16        | TRUE  | 5291    | 74.5   | 70.8   | 63.1     |
