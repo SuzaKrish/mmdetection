@@ -23,6 +23,7 @@ Train Method = trainval,  Seed = 1,   Determinitic = False
 | R-50     | 32        | TRUE  | 5148    | 71.0   | 70.8   | 63.1     |
 | R-101    | 4         | TRUE  | 6467    | 72.8   | 72.3   | 63.1     |
 | R-101    | 16        | TRUE  | 6468    | 72.8   | 72.3   | 63.1     |
+| R-101    | 16        | TRUE  | 6467    | 73.2   | 72.3   | 63.1     |
 
 
 
@@ -37,6 +38,7 @@ Train Method = trainval,  Seed = 1,   Determinitic = False
 | R-50     | 32        | TRUE  | 5381    | 70.6   | 70.8   | 63.1     |
 | R-101    | 4         | TRUE  | 7298    | 72.1   | 72.3   | 63.1     |
 | R-101    | 16        | TRUE  | 7085    | 72.3   | 72.3   | 63.1     |
+| R-101    | 16        | TRUE  | 7049    | 72.5   | 72.3   | 63.1     |
 
 
 
