@@ -1,47 +1,22 @@
 ## CBAM at Faster-RCNN after roi align 
 Spatial kernel size= 7 Train Method = trainval,  Seed = 1,   Determinitic = False 
 
-| Backbone | Reduction | C_Bias  | s_Bias  | Mem(MB) | box AP | Non-SE | Baseline | GPU     |
-|----------|-----------|---------|---------|---------|--------|--------|----------|---------|
-| R-50     | 1         | TRUE    | TRUE    | 5053    | 70.5   | 68.3   | 63.1     | V100    |
-| R-50     | 4         | TRUE    | TRUE    | 5052    | 70.9   | 68.3   | 63.1     | TITAN V |
-| R-50     | 8         | TRUE    | TRUE    | 5052    | 70.9   | 68.3   | 63.1     | V100    |
-| R-50     | 16        | TRUE    | TRUE    | 4888    | 70.8   | 68.3   | 63.1     | TITAN V |
-| R-50     | 32        | TRUE    | TRUE    | 5051    | 71.1   | 68.3   | 63.1     | V100    |
-| R-50     | 64        | TRUE    | TRUE    | 4888    | 69.5   | 68.3   | 63.1     | TITAN V |
-| R-101    | 4         | TRUE    | TRUE    | 5051    | 72.7   | 68.3   | 63.1     | V100    |
-| R-101    | 16        | TRUE    | TRUE    | 5051    | 72.3   | 68.3   | 63.1     | V100    |
-| R-101    | 32        | TRUE    | TRUE    | 5051    | 72.8   | 68.3   | 63.1     | V100    |
+| Backbone | Reduction | C_Bias  | s_Bias  | Mem(MB) | box AP | ours   | Baseline |
+|----------|-----------|---------|---------|---------|--------|--------|----------|
+| R-50     | 4         | TRUE    | TRUE    | 5262    | 70.8   | 68.3   | 63.1     |
+| R-50     | 16        | TRUE    | TRUE    | 5261    | 71.0   | 68.3   | 63.1     |
 
-Spatial kernel size= 3 Train Method = trainval,  Seed = 1,   Determinitic = False 
 
-| Backbone | Reduction | C_Bias  | s_Bias  | Mem(MB) | box AP | Non-SE | Baseline | GPU     |
-|----------|-----------|---------|---------|---------|--------|--------|----------|---------|
-| R-50     | 4         | TRUE    | TRUE    | 5051    | 70.6   | 68.3   | 63.1     | V100    |
-| R-50     | 8         | TRUE    | TRUE    | 5051    | 70.6   | 68.3   | 63.1     | V100    |
-| R-50     | 16        | TRUE    | TRUE    | 5051    | 70.5   | 68.3   | 63.1     | V100    |
-| R-50     | 32        | TRUE    | TRUE    | 5051    | 70.7   | 68.3   | 63.1     | V100    |
-| R-101    | 4         | TRUE    | TRUE    | 5051    | 72.7   | 68.3   | 63.1     | V100    |
-| R-101    | 16        | TRUE    | TRUE    | 5051    | 72.1   | 68.3   | 63.1     | V100    |
-| R-101    | 32        | TRUE    | TRUE    | 5051    | 72.6   | 68.3   | 63.1     | V100    |
 
 ## CBAM at Faster-RCNN after FPN
 Spatial kernel size= 7 Train Method = trainval,  Seed = 1,   Determinitic = False 
 
-| Backbone | Reduction | C_Bias  | s_Bias  | Mem(MB) | box AP | Non-SE | Baseline | GPU     |
-|----------|-----------|---------|---------|---------|--------|--------|----------|---------|
-| R-50     | 4         | TRUE    | TRUE    | 5052    | 70.4   | 68.3   | 63.1     | TITAN V |
-| R-50     | 8         | TRUE    | TRUE    | 5052    | 70.3   | 68.3   | 63.1     | V100    |
-| R-50     | 16        | TRUE    | TRUE    | 4888    | 70.3   | 68.3   | 63.1     | TITAN V |
-| R-50     | 32        | TRUE    | TRUE    | 5051    | 70.2   | 68.3   | 63.1     | V100    |
+| Backbone | Reduction | C_Bias  | s_Bias  | Mem(MB) | box AP | ours   | Baseline |
+|----------|-----------|---------|---------|---------|--------|--------|----------|
+| R-50     | 4         | TRUE    | TRUE    | 5261    | 70.7   | 70.8   | 63.1     |
+| R-50     | 16        | TRUE    | TRUE    | 5262    | 71.4   | 70.8   | 63.1     |
 
 
 
-Spatial kernel size= 3 Train Method = trainval,  Seed = 1,   Determinitic = False 
-
-| Backbone | Reduction | C_Bias  | s_Bias  | Mem(MB) | box AP | Non-SE | Baseline | GPU     |
-|----------|-----------|---------|---------|---------|--------|--------|----------|---------|
-| R-50     | 4         | TRUE    | TRUE    | 5262    | 69.2   | 68.3   | 63.1     | TITAN V |
-| R-50     | 16        | TRUE    | TRUE    | 5260    | 70.5   | 68.3   | 63.1     | TITAN V |
 
 
