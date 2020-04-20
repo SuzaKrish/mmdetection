@@ -24,4 +24,13 @@ Spatial kernel size= 7 Train Method = trainval,  Seed = 1,   Determinitic = Fals
 
 
 
+## CBAM at Faster-RCNN in Backbone
+Spatial kernel size= 7 Train Method = trainval,  Seed = 1,   Determinitic = False 
+
+| Backbone | Reduction | C_Bias  | s_Bias  | Mem(MB) | box AP | ours   | Baseline |
+|----------|-----------|---------|---------|---------|--------|--------|----------|
+| R-50     | 4         | TRUE    | TRUE    | 5821    | 70.4   | 70.8   | 63.1     |
+| R-50     | 16        | TRUE    | TRUE    | 5708    | 70.0   | 70.8   | 63.1     |
+
+
 
