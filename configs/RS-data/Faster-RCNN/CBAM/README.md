@@ -3,8 +3,11 @@ Spatial kernel size= 7 Train Method = trainval,  Seed = 1,   Determinitic = Fals
 
 | Backbone | Reduction | C_Bias  | s_Bias  | Mem(MB) | box AP | ours   | Baseline |
 |----------|-----------|---------|---------|---------|--------|--------|----------|
-| R-50     | 4         | TRUE    | TRUE    | 5262    | 70.8   | 68.3   | 63.1     |
-| R-50     | 16        | TRUE    | TRUE    | 5261    | 71.0   | 68.3   | 63.1     |
+| R-50     | 4         | TRUE    | TRUE    | 5262    | 70.8   | 70.8   | 63.1     |
+| R-50     | 16        | TRUE    | TRUE    | 5261    | 71.0   | 70.8   | 63.1     |
+| R-101    | 4         | TRUE    | TRUE    | 6574    | 72.8   | 72.3   | 65.1     |
+| R-101    | 16        | TRUE    | TRUE    | 6575    | 72.6   | 72.3   | 65.1     |
+
 
 
 
