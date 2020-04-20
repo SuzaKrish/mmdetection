@@ -13,4 +13,4 @@ pretrained-style=caffe Train Method = trainval,  Seed = 1,   Determinitic = Fals
 
 | Backbone | Mem(MB) | box AP | Faster-RCNN | Baseline |
 |----------|---------|--------|-------------|----------|
-| R-50     | 3312    | 72.0   | 68.0        | 63.1     |
+| R-50     | 3312    | 70.8   | 68.0        | 63.1     |
