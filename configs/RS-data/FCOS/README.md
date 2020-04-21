@@ -4,7 +4,7 @@ pretrained-style=caffe Train Method = trainval,  Seed = 1,   Determinitic = Fals
 
 | Backbone | Mem(MB) | box AP | Faster-RCNN | Baseline |
 |----------|---------|--------|-------------|----------|
-| R-50     | 2731    | 71.3   | 68.0        | 63.1     |
+
 
 
 ## FCOS (center)
