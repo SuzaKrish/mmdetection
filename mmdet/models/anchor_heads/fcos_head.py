@@ -145,7 +145,7 @@ class FCOSHead(nn.Module):
 
         # attention for cls
         if hasattr(self, 'cls_attention') and self.cls_attention is not None:
-            cls_feat += self.cls_attention(cls_feat)
+            cls_feat = self.cls_attention(cls_feat) + cls_feat
 
         cls_score = self.fcos_cls(cls_feat)
         centerness = self.fcos_centerness(cls_feat)
@@ -155,7 +155,7 @@ class FCOSHead(nn.Module):
 
         #attention for reg
         if hasattr(self, 'reg_attention') and self.reg_attention is not None:
-            reg_feat += self.reg_attention(reg_feat)
+            reg_feat = self.reg_attention(reg_feat) + reg_feat
 
         # scale the bbox_pred of different level
         # float to avoid overflow when enabling FP16
