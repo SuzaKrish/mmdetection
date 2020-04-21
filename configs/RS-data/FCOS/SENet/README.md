@@ -1,8 +1,10 @@
 ## SE at FCOS in bbox_head 
 Train Method = trainval,  Seed = 1,   Determinitic = False 
 
-| Backbone | cls-Reduction | reg-reduction | cls-Bias | reg-Bias | Mem(MB) | box AP | Non-SE | Baseline |
+| Backbone | cls-Reduction | reg-reduction | cls-Bias | reg-Bias | Mem(MB) | box AP | Ours   | Baseline |
 |----------|---------------|---------------|----------|----------|---------|--------|--------|----------|
+| R-50     | 4             | 4             | True     | True     | 3368    | 71.2   | 70.8   | 63.1     |
+| R-50     | 16            | 16            | True     | True     | 3367    | 71.2   | 70.8   | 63.1     |
 
 
 ## SE at FCOS in FPN 
