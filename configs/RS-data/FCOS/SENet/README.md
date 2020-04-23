@@ -6,8 +6,8 @@ Train Method = trainval,  Seed = 1,   Determinitic = False
 | R-50     | 4             | 4             | True     | True     | 3368    | 71.2   | 70.8   | 63.1     |
 | R-50     | 16            | 16            | True     | True     | 3367    | 71.2   | 70.8   | 63.1     |
 | R-50     | 32            | 32            | True     | True     | 3367    | 70.2   | 70.8   | 63.1     |
-| R-101    | 4             | 4             | True     | True     | 4677    | 71.5   | 72.3   | 63.1     |
-| R-101    | 16            | 16            | True     | True     | 4677    | 72.0   | 72.3   | 63.1     |
+| R-101    | 4             | 4             | True     | True     | 4677    | 71.5   | 72.7   | 65.1     |
+| R-101    | 16            | 16            | True     | True     | 4677    | 72.0   | 72.7   | 65.1     |
 
 ## SE at FCOS in FPN 
 Train Method = trainval,  Seed = 1,   Determinitic = False 
