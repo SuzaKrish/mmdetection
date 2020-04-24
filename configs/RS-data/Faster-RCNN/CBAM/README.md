@@ -22,7 +22,7 @@ Spatial kernel size= 7 Train Method = trainval,  Seed = 1,   Determinitic = Fals
 | R-50     | 32        | TRUE    | TRUE    | 5261    | 71.3   | 70.8   | 63.1     |
 | R-101    | 4         | TRUE    | TRUE    | 6573    | 72.7   | 72.3   | 65.1     |
 | R-101    | 16        | TRUE    | TRUE    | 6574    | 73.1   | 72.3   | 65.1     |
-| R-101    | 32        | TRUE    | TRUE    | 6576    | 72.7   | 72.3   | 65.1     |
+| R-101    | 32        | TRUE    | TRUE    | 6574    | 72.8   | 72.3   | 65.1     |
 
 
 
