@@ -31,3 +31,5 @@ Train Method = trainval,  Seed = 1,   Determinitic = False
 
 | Backbone | Reduction | Bias | Mem(MB) | box AP | Ours   | Baseline |
 |----------|-----------|------|---------|--------|--------|----------|
+| R-50     | 4         | True | 4086    | 70.5   | 70.8   | 63.1     |
+| R-50     | 16        | True | 3975    | 70.0   | 70.8   | 63.1     |
