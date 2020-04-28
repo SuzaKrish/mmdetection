@@ -25,7 +25,13 @@ Train Method = trainval,  Seed = 1,   Determinitic = False
 | R-101    | 16        | TRUE  | 6468    | 72.8   | 72.3   | 63.1     |
 | R-101    | 32        | TRUE  | 6467    | 73.2   | 72.3   | 63.1     |
 
+## SE at Faster-RCNN after ROI and FPN
+Train Method = trainval,  Seed = 1,   Determinitic = False 
 
+| Backbone | ROI Reduction | ROIBias  | FPN Reduction | FPN Bias  | Mem(MB) | box AP | Ours   | Baseline |
+|----------|---------------|----------|---------------|-----------|---------|--------|--------|----------|
+| R-50     | 4             | TRUE     | 4             | TRUE      | 5261    | 70.5   | 70.8   | 63.1     |
+| R-50     | 16            | TRUE     | 16            | TRUE      | 5258    | 70.8   | 70.8   | 63.1     |
 
 
 ## SE at Faster-RCNN at backbone 
