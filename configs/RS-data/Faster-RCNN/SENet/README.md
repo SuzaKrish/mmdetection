@@ -1,37 +1,61 @@
-## SE at Faster-RCNN after roi align 
+## SE at Faster-RCNN after FPN + roi align 
 Train Method = trainval,  Seed = 1,   Determinitic = False 
 
-| Backbone | Reduction | Bias  | Mem(MB) | box AP | Non-SE | Baseline |
+| Backbone | Reduction | Bias  | Mem(MB) | box AP | Ours   | Baseline |
 |----------|-----------|-------|---------|--------|--------|----------|
-| R-50     | 1         | TRUE  | 4891    | 68.0   | 68.3   | 63.1     |
-| R-50     | 1         | False | 4891    | 70.4   | 68.3   | 63.1     |
-| R-50     | 4         | True  | 4891    | 70.3   | 68.3   | 63.1     |
-| R-50     | 4         | False | 4891    | 70.5   | 68.3   | 63.1     |
-| R-50     | 8         | False | 4890    | 70.6   | 68.3   | 63.1     |
-| R-50     | 16        | Trud  | 4890    | 70.4   | 68.3   | 63.1     |
-| R-50     | 16        | False | 4890    | 70.8   | 68.3   | 63.1     |
-| R-50     | 32        | False | 4890    | 70.5   | 68.3   | 63.1     |
-| R-50     | 64        | False | 4890    | 70.5   | 68.3   | 63.1     |
-| R-50     | 128       | False | 4890    | 70.4   | 68.3   | 63.1     |
-| R-50     | 256       | False | 4890    | 70.7   | 68.3   | 63.1     |
-| R-101    | 1         | True  | 6127    | 72.2   | 68.6   | 65.1     |
-| R-101    | 4         | True  | 6127    | 71.5   | 68.6   | 65.1     |
-| R-101    | 8         | True  | 6127    | 72.5   | 68.6   | 65.1     |
-| R-101    | 16        | True  | 6127    | 72.3   | 68.6   | 65.1     |
-| R-101    | 32        | True  | 6127    | 72.8   | 68.6   | 65.1     |
-| R-101    | 64        | True  | 6127    | 72.4   | 68.6   | 65.1     |
+| R-50     | 4         | True  | 5052    | 71.1   | 70.8   | 63.1     |
+| R-50     | 16        | True  | 5051    | 71.0   | 70.8   | 63.1     |
+| R-50     | 32        | True  | 5051    | 70.9   | 70.8   | 63.1     |
+| R-101    | 4         | True  | 6363    | 72.8   | 72.3   | 63.1     |
+| R-101    | 16        | True  | 6360    | 72.9   | 72.3   | 63.1     |
+| R-101    | 32        | True  | 6363    | 73.1   | 72.3   | 63.1     |
+
 
 
 ## SE at Faster-RCNN after FPN 
 Train Method = trainval,  Seed = 1,   Determinitic = False 
 
-| Backbone | Reduction | Bias  | Mem(MB) | box AP | Non-SE | Baseline |
+| Backbone | Reduction | Bias  | Mem(MB) | box AP | Ours   | Baseline |
 |----------|-----------|-------|---------|--------|--------|----------|
-| R-50     | 4         | TRUE  | 4992    | 69.3   | 68.3   | 63.1     |
-| R-50     | 8         | TRUE  | 4992    | 69.4   | 68.3   | 63.1     |
-| R-50     | 16        | TRUE  | 4992    | 69.5   | 68.3   | 63.1     |
-| R-50     | 32        | TRUE  | 4992    | 69.1   | 68.3   | 63.1     |
-| R-101    | 4         | TRUE  | 6232    | 71.7   | 68.6   | 63.1     |
-| R-101    | 8         | TRUE  | 6232    | 72.0   | 68.6   | 63.1     |
-| R-101    | 16        | TRUE  | 6232    | 72.0   | 68.6   | 63.1     |
-| R-101    | 16        | TRUE  | 6232    | 71.9   | 68.6   | 63.1     |
+| R-50     | 4         | TRUE  | 5152    | 71.1   | 70.8   | 63.1     |
+| R-50     | 16        | TRUE  | 5152    | 71.1   | 70.8   | 63.1     |
+| R-50     | 32        | TRUE  | 5148    | 71.0   | 70.8   | 63.1     |
+| R-101    | 4         | TRUE  | 6467    | 72.8   | 72.3   | 63.1     |
+| R-101    | 16        | TRUE  | 6468    | 72.8   | 72.3   | 63.1     |
+| R-101    | 32        | TRUE  | 6467    | 73.2   | 72.3   | 63.1     |
+
+## SE at Faster-RCNN after ROI and FPN
+Train Method = trainval,  Seed = 1,   Determinitic = False 
+
+| Backbone | ROI Reduction | ROIBias  | FPN Reduction | FPN Bias  | Mem(MB) | box AP | Ours   | Baseline |
+|----------|---------------|----------|---------------|-----------|---------|--------|--------|----------|
+| R-50     | 4             | TRUE     | 4             | TRUE      | 5052    | 71.3   | 70.8   | 63.1     |
+| R-50     | 16            | TRUE     | 16            | TRUE      | 5051    | 71.2   | 70.8   | 63.1     |
+| R-50     | 32            | TRUE     | 32            | TRUE      | 5051    | 70.7   | 70.8   | 63.1     |
+| R-101    | 4             | TRUE     | 4             | TRUE      | 6466    | 72.6   | 70.8   | 63.1     |
+| R-101    | 16            | TRUE     | 16            | TRUE      | 6462    | 72.4   | 70.8   | 63.1     |
+| R-101    | 32            | TRUE     | 32            | TRUE      | 6468    | 72.6   | 70.8   | 63.1     |
+
+
+## SE at Faster-RCNN at backbone 
+Train Method = trainval,  Seed = 1,   Determinitic = False 
+
+| Backbone | Reduction | Bias  | Mem(MB) | box AP | Ours   | Baseline |
+|----------|-----------|-------|---------|--------|--------|----------|
+| R-50     | 4         | TRUE  | 5509    | 70.0   | 70.8   | 63.1     |
+| R-50     | 16        | TRUE  | 5509    | 70.3   | 70.8   | 63.1     |
+| R-50     | 32        | TRUE  | 5381    | 70.6   | 70.8   | 63.1     |
+| R-101    | 4         | TRUE  | 7298    | 72.1   | 72.3   | 63.1     |
+| R-101    | 16        | TRUE  | 7085    | 72.3   | 72.3   | 63.1     |
+| R-101    | 32        | TRUE  | 7049    | 72.5   | 72.3   | 63.1     |
+
+
+
+## SE at Faster-RCNN at backbone (pretrained)
+Train Method = trainval,  Seed = 1,   Determinitic = False 
+
+| Backbone | Reduction | Bias  | Mem(MB) | box AP | Ours   | Baseline |
+|----------|-----------|-------|---------|--------|--------|----------|
+| R-50     | 4         | TRUE  | 5403    | 72.2   | 70.8   | 63.1     |
+| R-50     | 16        | TRUE  | 5291    | 74.5   | 70.8   | 63.1     |
+| R-50     | 32        | TRUE  | 5270    | 72.2   | 70.8   | 63.1     |
