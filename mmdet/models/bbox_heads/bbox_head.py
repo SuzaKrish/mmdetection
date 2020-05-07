@@ -179,7 +179,12 @@ class BBoxHead(nn.Module):
                                                                     cfg.score_thr, cfg.nms,
                                                                     cfg.max_per_img,
                                                                     return_indexes=True)
-                return det_bboxes, det_labels, roi_levels[index_list[0].sum(1) == 1][index_list[1]]
+                if len(index_list) == 0:
+                    return det_bboxes, det_labels, index_list
+                else:
+                    return det_bboxes, det_labels, roi_levels.reshape(-1, 1).\
+                        repeat(1, index_list[0].shape[1])[index_list[0]][index_list[1]]
+
 
     @force_fp32(apply_to=('bbox_preds', ))
     def refine_bboxes(self, rois, labels, bbox_preds, pos_is_gts, img_metas):

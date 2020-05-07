@@ -47,7 +47,10 @@ def multiclass_nms(multi_bboxes,
     if bboxes.numel() == 0:
         bboxes = multi_bboxes.new_zeros((0, 5))
         labels = multi_bboxes.new_zeros((0, ), dtype=torch.long)
-        return bboxes, labels
+        if not return_indexes:
+            return bboxes, labels
+        else:
+            return bboxes, labels, []
 
     # Modified from https://github.com/pytorch/vision/blob
     # /505cd6957711af790211896d32b40291bea1bc21/torchvision/ops/boxes.py#L39.
