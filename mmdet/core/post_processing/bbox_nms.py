@@ -8,7 +8,8 @@ def multiclass_nms(multi_bboxes,
                    score_thr,
                    nms_cfg,
                    max_num=-1,
-                   score_factors=None):
+                   score_factors=None,
+                   return_indexes=False):
     """NMS for multi-class bboxes.
 
     Args:
@@ -22,7 +23,7 @@ def multiclass_nms(multi_bboxes,
             only top max_num will be kept.
         score_factors (Tensor): The factors multiplied to scores before
             applying NMS
-
+        return_indexes (List): if set 1, return [valid_mask, keep]
     Returns:
         tuple: (bboxes, labels), tensors of shape (k, 5) and (k, 1). Labels
             are 0-based.
@@ -72,5 +73,7 @@ def multiclass_nms(multi_bboxes,
         bboxes = bboxes[inds]
         scores = scores[inds]
         labels = labels[inds]
-
-    return torch.cat([bboxes, scores[:, None]], 1), labels
+    if not return_indexes:
+        return torch.cat([bboxes, scores[:, None]], 1), labels
+    else:
+        return torch.cat([bboxes, scores[:, None]], 1), labels, [valid_mask, keep]

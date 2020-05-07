@@ -143,7 +143,8 @@ class BBoxHead(nn.Module):
                        img_shape,
                        scale_factor,
                        rescale=False,
-                       cfg=None):
+                       cfg=None,
+                       roi_levels=None):
         if isinstance(cls_score, list):
             cls_score = sum(cls_score) / float(len(cls_score))
         scores = F.softmax(cls_score, dim=1) if cls_score is not None else None
@@ -168,11 +169,17 @@ class BBoxHead(nn.Module):
         if cfg is None:
             return bboxes, scores
         else:
-            det_bboxes, det_labels = multiclass_nms(bboxes, scores,
-                                                    cfg.score_thr, cfg.nms,
-                                                    cfg.max_per_img)
-
-            return det_bboxes, det_labels
+            if roi_levels is None:
+                det_bboxes, det_labels = multiclass_nms(bboxes, scores,
+                                                        cfg.score_thr, cfg.nms,
+                                                        cfg.max_per_img)
+                return det_bboxes, det_labels
+            else:
+                det_bboxes, det_labels, index_list = multiclass_nms(bboxes, scores,
+                                                                    cfg.score_thr, cfg.nms,
+                                                                    cfg.max_per_img,
+                                                                    return_indexes=True)
+                return det_bboxes, det_labels, roi_levels.reshape([-1, 1])[index_list[0]][index_list[1]]
 
     @force_fp32(apply_to=('bbox_preds', ))
     def refine_bboxes(self, rois, labels, bbox_preds, pos_is_gts, img_metas):
