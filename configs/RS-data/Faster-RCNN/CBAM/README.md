@@ -26,7 +26,7 @@ Spatial kernel size= 7 Train Method = trainval,  Seed = 1,   Determinitic = Fals
 
 
 
-## SE at Faster-RCNN after ROI and FPN
+## CBAM at Faster-RCNN after ROI and FPN
 Train Method = trainval,  Seed = 1,   Determinitic = False 
 
 | Backbone | ROI Reduction | ROIBias  | FPN Reduction | FPN Bias  | Mem(MB) | box AP | Ours   | Baseline |
