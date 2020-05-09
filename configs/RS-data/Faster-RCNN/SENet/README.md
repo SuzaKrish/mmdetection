@@ -1,4 +1,4 @@
-## SE at Faster-RCNN after FPN + roi align 
+## SE at Faster-RCNN after ROI align 
 Train Method = trainval,  Seed = 1,   Determinitic = False 
 
 | Backbone | Reduction | Bias  | Mem(MB) | box AP | Ours   | Baseline |
