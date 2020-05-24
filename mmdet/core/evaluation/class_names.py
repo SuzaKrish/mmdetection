@@ -14,7 +14,7 @@ def dior_classes():
     ]
 
 def dota_classes():
-    return = ['plane', 'baseball-diamond',
+    return ['plane', 'baseball-diamond',
                 'bridge', 'ground-track-field',
                 'small-vehicle', 'large-vehicle',
                 'ship', 'tennis-court',
