@@ -17,5 +17,5 @@ __all__ = [
     'CityscapesDataset', 'GroupSampler', 'DistributedGroupSampler',
     'build_dataloader', 'ConcatDataset', 'RepeatDataset', 'WIDERFaceDataset',
     'MOONCraterDataset', 'DATASETS', 'build_dataset', 'DIORDataset', 'DOTADataset'
-    'DistributedSampler', 'ClassBalancedDataset', 'PIPELINES'
+    'DistributedSampler', 'ClassBalancedDataset', 'PIPELINES', 'MyDataset'
 ]
